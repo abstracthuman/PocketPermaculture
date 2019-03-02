@@ -2,6 +2,13 @@
 
 var Mustache = require('mustache');
 
+function getPinUserTemplate(userName) {
+    var template = $('#pin-user-template').html();
+    return Mustache.render(template, {
+        userName: userName
+    });
+}
+
 function getPinTemplate(pin) {
     var template = $('#pin-template').html();
     return Mustache.render(template, {
@@ -12,24 +19,28 @@ function getPinTemplate(pin) {
     });
 }
 
-app.getUserPins = function(email) {
+app.getUserPins = function(userName) {
     var $loader = $('.loader');
+    var $defaultPinMessage = $('.default-pin-message');
+    var $pins = $('.pins').empty();
     return $.ajax({
         url: './NearMe/GetUserPins/',
         contentType: "application/json; charset=utf-8",
-        data: { email : email },
+        data: { userName : userName },
         beforeSend: function () {
             $loader.removeClass('d-none');
         }
     }).done(function () {
         $loader.addClass('d-none');
+        $defaultPinMessage.remove();
+        $pins.empty().prepend(getPinUserTemplate(userName));
     });
 };
 
-app.loadUserPins = function(marker, map, email) {
+app.loadUserPins = function(marker, map, userName) {
     marker.addListener('click', function() {
         var $pins = $('.pins').empty();
-        app.getUserPins(email).always(function (pins) {
+        app.getUserPins(userName).always(function (pins) {
             var i;
             for (i = 0; i < pins.length; i++) {
                 var pin = pins[i];
@@ -136,7 +147,7 @@ app.initMap = function(coords, locations) {
             position: locations[i].position
         });
 
-        app.loadUserPins(marker, map, locations[i].email);
+        app.loadUserPins(marker, map, locations[i].userName);
 
         marker.setMap(map);
         markers.push(marker);

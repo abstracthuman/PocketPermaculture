@@ -46,7 +46,7 @@ namespace PocketPermaculture
 
             ApplicationSettings applicationSettings = new ApplicationSettings()
             {
-                GetGoogleApiKey = Configuration["PocketPermaculture:GoogleApiKey"]
+                GoogleApiKey = Configuration["PocketPermaculture:GoogleApiKey"]
             };
             services.AddSingleton<ApplicationSettings>(applicationSettings);
         }
@@ -81,7 +81,7 @@ namespace PocketPermaculture
 
         public class ApplicationSettings
         {
-            public string GetGoogleApiKey { get; set; }
+            public string GoogleApiKey { get; set; }
         }
     }
 }

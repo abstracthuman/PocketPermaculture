@@ -46,7 +46,7 @@ namespace PocketPermaculture.Controllers
             Location userLocation = null;
             List<UserMapData> allUserMapData = new List<UserMapData>();
 
-            ViewBag.googleApiKey = _applicationSettings.GetGoogleApiKey;
+            ViewBag.googleApiKey = _applicationSettings.GoogleApiKey;
 
             if (userAddress != null)
             {
@@ -107,7 +107,7 @@ namespace PocketPermaculture.Controllers
 
                                     UserMapData userMapData = new UserMapData
                                     {
-                                        Email = member.Email,
+                                        UserName = member.UserName,
                                         Location = location,
                                         LocationColor = GetLocationColor(pins)
                                     };
@@ -120,7 +120,7 @@ namespace PocketPermaculture.Controllers
                 }
             }
 
-            if (allUserMapData == null) 
+            if (allUserMapData.Count == 0) 
             {
                 ViewBag.isNearMe = "false";
                 ViewBag.noPins = "true";
@@ -133,12 +133,12 @@ namespace PocketPermaculture.Controllers
         }
 
         [HttpGet]
-        public List<UserPin> GetUserPins(string email)
+        public List<UserPin> GetUserPins(string userName)
         {
-            if (email != null)
+            if (userName != null)
             {
                 var pins = new List<UserPin>();
-                var user = _db.Users.FirstOrDefault(uid => uid.Email == email);
+                var user = _db.Users.FirstOrDefault(uid => uid.UserName == userName);
                 var userPins = _db.UserPins.Where(uid => uid.UserId == user.Id).ToList();
 
                 foreach (var pin in userPins)
@@ -260,7 +260,7 @@ namespace PocketPermaculture.Controllers
 
         public class UserMapData
         {
-            public string Email { get; set; }
+            public string UserName { get; set; }
             public string LocationColor { get; set; }
             public Location Location { get; set; }
         }

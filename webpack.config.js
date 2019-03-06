@@ -22,14 +22,15 @@ module.exports = (env, argv) => {
 
     return {
         mode: devMode ? 'development' : 'production',
-        entry: [
-            './wwwroot/js/site.js', 
-            './wwwroot/sass/site.scss'
-        ],
+        entry: {
+            site: './wwwroot/js/site.js', 
+            chat: './wwwroot/js/chat.js', 
+            style: './wwwroot/sass/site.scss'
+        },
         output: {
             path: path.resolve(__dirname, 'wwwroot/dist'),
             publicPath: '/css',
-            filename: 'js/site.js'
+            filename: 'js/[name].js'
         },
         module: {
             rules: [

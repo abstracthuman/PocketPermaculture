@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PocketPermaculture.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using PocketPermaculture.Data;
+using PocketPermaculture.Hubs;
 
 namespace PocketPermaculture
 {
@@ -44,6 +46,8 @@ namespace PocketPermaculture
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSignalR();
+
             ApplicationSettings applicationSettings = new ApplicationSettings()
             {
                 GoogleApiKey = Configuration["PocketPermaculture:GoogleApiKey"]
@@ -70,6 +74,11 @@ namespace PocketPermaculture
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/Chat");
+            });
 
             app.UseMvc(routes =>
             {

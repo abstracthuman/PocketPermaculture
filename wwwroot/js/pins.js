@@ -46,7 +46,6 @@ app.loadUserPins = function(marker, map, userName) {
                 var pin = pins[i];
                 $pins.append(getPinTemplate(pin));
             }
-            require('./rating')();
         });
     });
 };

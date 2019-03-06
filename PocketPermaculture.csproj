@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,11 +42,14 @@
     <Folder Include="Utils\" />
     <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\js\thirdParty\" />
+    <Folder Include="Hubs\" />
+    <Folder Include="Views\Chat\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\js\site.min.js" />
     <Content Remove="wwwroot\js\components\pins.js" />
     <Content Remove="Views\Mustache\_InfoPin.cshtml" />
     <Content Remove="wwwroot\mustache\infoPin.html" />
+    <Content Remove="wwwroot\dist\main.js" />
   </ItemGroup>
 </Project>

@@ -2,9 +2,10 @@
 
 var Mustache = require('mustache');
 
-function getPinUserTemplate(userName) {
+function getPinUserTemplate(userId, userName) {
     var template = $('#pin-user-template').html();
     return Mustache.render(template, {
+        userId: userId,
         userName: userName
     });
 }
@@ -19,7 +20,7 @@ function getPinTemplate(pin) {
     });
 }
 
-app.getUserPins = function(userName) {
+app.getUserPins = function(userId, userName) {
     var $loader = $('.loader');
     var $defaultPinMessage = $('.default-pin-message');
     var $pins = $('.pins').empty();
@@ -33,14 +34,14 @@ app.getUserPins = function(userName) {
     }).done(function () {
         $loader.addClass('d-none');
         $defaultPinMessage.remove();
-        $pins.empty().prepend(getPinUserTemplate(userName));
+        $pins.empty().prepend(getPinUserTemplate(userId, userName));
     });
 };
 
-app.loadUserPins = function(marker, map, userName) {
+app.loadUserPins = function(marker, map, userId, userName) {
     marker.addListener('click', function() {
         var $pins = $('.pins').empty();
-        app.getUserPins(userName).always(function (pins) {
+        app.getUserPins(userId, userName).always(function (pins) {
             var i;
             for (i = 0; i < pins.length; i++) {
                 var pin = pins[i];
@@ -112,7 +113,11 @@ function fitBounds() {
 }
 
 // Initialize and add the map
-app.initMap = function(coords, locations) {
+app.initMap = function (coords, locations, groupName) {
+    // Set group name for chat
+    var $groupName = $('#group-name');
+    $groupName.val(groupName);
+
     var lat = Number(coords.lat);
     var lng = Number(coords.lng);
     map = new google.maps.Map(document.getElementById('map'), {
@@ -146,7 +151,7 @@ app.initMap = function(coords, locations) {
             position: locations[i].position
         });
 
-        app.loadUserPins(marker, map, locations[i].userName);
+        app.loadUserPins(marker, map, locations[i].userId, locations[i].userName);
 
         marker.setMap(map);
         markers.push(marker);

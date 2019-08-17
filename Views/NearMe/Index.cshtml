@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using PocketPermaculture.Data
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
     ViewData["Title"] = "Near Me";
 }
 
@@ -9,11 +14,47 @@
             <div id="map"></div>
             <div id="legend"></div>
             <div class="pins-container">
-                <h3 class="default-pin-message">
-                    Select a region on the map to see offers and requests near you.
-                </h3>
-                <div class="pins"></div>
-                <div class="loader d-none"></div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pins-tab" data-toggle="tab" href="#pins" role="tab" aria-controls="pins" aria-selected="true">User Pins</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="chat-tab" data-toggle="tab" href="#chat" role="tab" aria-controls="chat" aria-selected="false">Chat</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="pins" role="tabpanel" aria-labelledby="pins-tab">
+                        <div class="loader d-none"></div>
+                        <h3 class="default-pin-message">
+                            Select a region on the map to see offers and requests near you.
+                        </h3>
+                        <div class="pins"></div>
+                    </div>
+                    <div class="chat-container tab-pane fade" id="chat" role="tabpanel" aria-labelledby="chat-tab">
+                        <div class="container">
+                            <div class="row">&nbsp;</div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <form class="form-group">
+                                        <div class="input-prepend input-append">
+                                            <input type="hidden" name="current-user" id="userName" value="@UserManager.GetUserName(User)" />
+                                            <input type="hidden" name="group-name" id="group-name" value="" />
+
+                                            <input type="text" name="group-message" id="group-message-text" class="form-control" placeholder="Type a message" />
+                                            <input type="button" id="groupmsg" class="btn btn-primary" value="Send to Group" />
+                                            <input type="button" id="join-group" class="btn btn-primary" value="Join Group" />
+                                            <input type="button" id="leave-group" class="btn btn-primary" value="Leave Group" />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-12">
+                                    <ul id="messagesList" class="messageList"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

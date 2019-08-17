@@ -1,19 +1,32 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
 
 namespace PocketPermaculture.Hubs
 {
-    public interface IChatClient
+    public class ChatHub : Hub
     {
-        Task ReceiveMessage(string user, string message);
-    }
-
-    public class ChatHub : Hub<IChatClient>
-    {
-        public async Task SendMessage(string user, string message)
+        public Task SendMessageToGroup(string userName, string groupName, string message)
         {
-            await Clients.All.ReceiveMessage(user, message);
+            return Clients.Group(groupName).SendAsync("Send", $"{userName}: {message}");
+        }
+
+        public async Task AddToGroup(string userName, string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
+            await Clients.Group(groupName).SendAsync("Send", $"{userName} has joined the group {groupName}.");
+        }
+
+        public async Task RemoveFromGroup(string userName, string groupName)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+
+            await Clients.Group(groupName).SendAsync("Send", $"{userName} has left the group {groupName}.");
+        }
+
+        public Task SendPrivateMessage(string user, string message)
+        {
+            return Clients.User(user).SendAsync("ReceiveMessage", message);
         }
     }
 }

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using PocketPermaculture.Data;
+using PocketPermaculture.Hubs;
 using WebApiClient;
 using static PocketPermaculture.Startup;
 
@@ -15,6 +17,7 @@ namespace PocketPermaculture.Controllers
     {
         private readonly ApplicationSettings _applicationSettings;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHubContext<ChatHub> _hubContext;
         private readonly ApplicationDbContext _db;
 
         public readonly MakeWebCall makeWebCall = new MakeWebCall();
@@ -22,12 +25,16 @@ namespace PocketPermaculture.Controllers
         public NearMe(
         ApplicationSettings applicationSettings,
         UserManager<ApplicationUser> userManager,
+        IHubContext<ChatHub> hubContext,
         ApplicationDbContext db)
         {
             _applicationSettings = applicationSettings;
             _userManager = userManager;
+            _hubContext = hubContext;
             _db = db;
         }
+
+        public readonly string googleURL = "https://maps.googleapis.com/maps/api/geocode/json";
 
         public async Task<IActionResult> Index()
         {
@@ -40,9 +47,12 @@ namespace PocketPermaculture.Controllers
                 return View();
             }
 
+            await _hubContext.Clients.All.SendAsync("Notify", $"Home page loaded at: {DateTime.Now}");
+
             var users = _userManager.Users.ToList(); // All Users
             var userAddress = _db.UserAddresses.FirstOrDefault(uad => uad.UserId == user.Id);
 
+            AddressComponent userCounty = null;
             Location userLocation = null;
             List<UserMapData> allUserMapData = new List<UserMapData>();
 
@@ -56,12 +66,19 @@ namespace PocketPermaculture.Controllers
                 if (userAddressQuery != "")
                 {
                     userLocation = GetCoords(userAddressQuery, ViewBag.googleApiKey);
+                    userCounty = GetCounty(userAddressQuery, ViewBag.googleApiKey);
 
                     List<Location> positions = new List<Location>();
                     Double distance = 0;
 
                     foreach (var member in users)
                     {
+                        // Don't load personal pins
+                        if (member.Id == user.Id)
+                        {
+                            continue;
+                        }
+
                         string memberAddressQuery = "";
                         var memberAddress = _db.UserAddresses.FirstOrDefault(uad => uad.UserId == member.Id);
                         var pins = _db.UserPins.Where(uid => uid.UserId == member.Id).ToList();
@@ -105,8 +122,10 @@ namespace PocketPermaculture.Controllers
                                         lng = memberLocation.lng
                                     };
 
+                                    // Need to ecnrypt UserId
                                     UserMapData userMapData = new UserMapData
                                     {
+                                        UserId = member.Id,
                                         UserName = member.UserName,
                                         Location = location,
                                         LocationColor = GetLocationColor(pins)
@@ -127,6 +146,7 @@ namespace PocketPermaculture.Controllers
                 return View();
             }
 
+            ViewBag.userCounty = userCounty.long_name;
             ViewBag.userLocation = userLocation;
             ViewBag.isNearMe = "true";
             return View(allUserMapData);
@@ -163,7 +183,8 @@ namespace PocketPermaculture.Controllers
             double R = 3960;
             var lat = ToRadians(pos2.lat - pos1.lat);
             var lng = ToRadians(pos2.lng - pos1.lng);
-            var h1 = Math.Sin(lat / 2) * Math.Sin(lat / 2) + Math.Cos(ToRadians(pos1.lat)) * Math.Cos(ToRadians(pos2.lat)) * Math.Sin(lng / 2) * Math.Sin(lng / 2);
+            var h1 = Math.Sin(lat / 2) * Math.Sin(lat / 2) + Math.Cos(ToRadians(pos1.lat)) *
+                Math.Cos(ToRadians(pos2.lat)) * Math.Sin(lng / 2) * Math.Sin(lng / 2);
             var h2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(h1)));
             return R * h2;
         }
@@ -186,11 +207,34 @@ namespace PocketPermaculture.Controllers
             return userAddressQuery;
         }
 
-        public Location GetCoords(string address, string apiKey) {
-            string url = "https://maps.googleapis.com/maps/api/geocode/json";
+        public AddressComponent GetCounty(string address, string apiKey)
+        {
             string query = "?address=" + address + "&key=" + apiKey;
 
-            string response = (string)makeWebCall.GetRequest(url, query);
+            string response = (string)makeWebCall.GetRequest(googleURL, query);
+            RootObject responseObject = JsonConvert.DeserializeObject<RootObject>(response);
+
+            var addressObject = responseObject.results[0].address_components;
+            var county = "";
+            foreach (var type in addressObject)
+            {
+                if (type.types[0] == "administrative_area_level_2")
+                {
+                    county = type.long_name;
+                }
+
+            }
+
+            return new AddressComponent
+            {
+                long_name = county
+            };
+        }
+
+        public Location GetCoords(string address, string apiKey) {
+            string query = "?address=" + address + "&key=" + apiKey;
+
+            string response = (string)makeWebCall.GetRequest(googleURL, query);
             RootObject responseObject = JsonConvert.DeserializeObject<RootObject>(response);
 
             Location location = new Location
@@ -260,9 +304,16 @@ namespace PocketPermaculture.Controllers
 
         public class UserMapData
         {
+            public string UserId { get; set; }
             public string UserName { get; set; }
             public string LocationColor { get; set; }
             public Location Location { get; set; }
+        }
+
+        public class AddressComponent
+        {
+            public string long_name { get; set; }
+            public List<string> types { get; set; }
         }
 
         public class Location
@@ -278,7 +329,9 @@ namespace PocketPermaculture.Controllers
 
         public class Result
         {
+            public List<AddressComponent> address_components { get; set; }
             public Geometry geometry { get; set; }
+            public List<string> types { get; set; }
         }
 
         public class RootObject

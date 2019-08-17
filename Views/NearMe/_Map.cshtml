@@ -9,6 +9,7 @@
     {
         <text>
         locations.push({
+            userId: '@userData.UserId',
             userName: '@userData.UserName',
             position: {lat: @userData.Location.lat, lng: @userData.Location.lng},
             positionColor: '@userData.LocationColor'
@@ -17,7 +18,8 @@
     }
 
     function initMap() {
-        app.initMap(coords, locations);
+        var groupName =  '@ViewBag.userCounty';
+        app.initMap(coords, locations, groupName);
     }
 </script>
 

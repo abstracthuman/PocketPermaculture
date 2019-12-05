@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocketPermaculture", "PocketPermaculture.csproj", "{4D655034-1D7B-4B8C-BA3B-4DECB003143B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiClient", "ApiClient\WebApiClient.csproj", "{7F3C0756-A645-4877-931D-6F974BB7418A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D655034-1D7B-4B8C-BA3B-4DECB003143B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D655034-1D7B-4B8C-BA3B-4DECB003143B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D655034-1D7B-4B8C-BA3B-4DECB003143B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D655034-1D7B-4B8C-BA3B-4DECB003143B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F3C0756-A645-4877-931D-6F974BB7418A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F3C0756-A645-4877-931D-6F974BB7418A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F3C0756-A645-4877-931D-6F974BB7418A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F3C0756-A645-4877-931D-6F974BB7418A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,77 @@
+﻿@page
+@model UserPinModel
+@{
+    ViewData["Title"] = "My Drop Pins";
+    ViewData["ActivePage"] = ManageNavPages.UserPin;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
+
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.HasAddress)
+        {
+            @if (Model.UserPinsView.Count < 5)
+            {
+                <p>The maximum pins you can drop is 5.</p>
+                <form id="user-pin-form" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Input.Title"></label>
+                        <input asp-for="Input.Title" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.Description"></label>
+                        <textarea asp-for="Input.Description" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.PinCategory"></label>
+                        @Html.DropDownListFor(x => x.Input.PinCategory, PocketPermaculture.Utils.Extensions.GetPinCategories(), new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.PinType"></label>
+                        <div class="radio">
+                            <label>@Html.RadioButtonFor(m => m.Input.PinType, "Offer") Offer</label>
+                            <label>@Html.RadioButtonFor(m => m.Input.PinType, "Request") Request</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Drop Pin</button>
+                </form>
+            }
+            else
+            {
+                <p>You have set the maximum number of pins.</p>
+            }
+        }
+        else
+        {
+            <p>You must set your address before adding pins <a href="./UserAddress" class="btn btn-secondary">Set My Address</a>.</p>
+        }
+    </div>
+</div>
+
+
+<div class="row user-pins">
+    @foreach (var pin in Model.UserPinsView)
+    {
+        <div class="card mt-3 mr-3 @pin.PinCategory.ToLower() @pin.PinType.ToLower()">
+            <form method="post" asp-page-handler="delete" asp-route-id="@pin.Id">
+                <h5 class="card-header">@pin.Title</h5>
+
+                <div class="card-body @pin.PinCategory.ToLower() @pin.PinType.ToLower()">
+                    <p class="card-text">@pin.Description</p>
+                    <button type="submit" class="btn btn-secondary">Delete @pin.PinType</button>
+                </div>
+            </form>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

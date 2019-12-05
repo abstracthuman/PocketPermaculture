@@ -1,0 +1,17 @@
+@using PocketPermaculture.Data;
+
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<ul class="nav nav-pills mb-4 flex-column">
+    <li class="nav-item"><a asp-page="./UserAddress" class="nav-link @ManageNavPages.UserAddressNavClass(ViewContext)">My Address</a></li>
+    <li class="nav-item"><a asp-page="./UserPin" class="nav-link @ManageNavPages.UserPinNavClass(ViewContext)">My Pins</a></li>
+    <li class="nav-item"><a id="change-password" asp-page="./ChangePassword" class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)">Password</a></li>
+    @if (hasExternalLogins)
+    {
+        <li class="nav-item"><a id="external-login" asp-page="./ExternalLogins" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)">External logins</a></li>
+    }
+    <li class="nav-item"><a asp-page="./TwoFactorAuthentication" class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)">Two-factor authentication</a></li>
+    <li class="nav-item"><a asp-page="./PersonalData" class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)">Personal data</a></li>
+</ul>

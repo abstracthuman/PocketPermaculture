@@ -1,0 +1,25 @@
+﻿<script>
+    var coords = {
+        lat: @ViewBag.userLocation.lat,
+        lng: @ViewBag.userLocation.lng
+    };
+    var locations = [];
+
+    @foreach (var userData in @Model)
+    {
+        <text>
+        locations.push({
+            email: '@userData.Email',
+            position: {lat: @userData.Location.lat, lng: @userData.Location.lng},
+            positionColor: '@userData.LocationColor'
+        });
+        </text>
+    }
+
+    function initMap() {
+        app.initMap(coords, locations);
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=@ViewBag.googleApiKey&callback=initMap"
+        async defer></script>

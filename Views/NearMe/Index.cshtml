@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Near Me";
+}
+
+@if (ViewBag.isNearMe == "true")
+{
+    <div class="map-container">
+        <div>
+            <div id="map"></div>
+            <div id="legend"></div>
+            <div class="pins-container">
+                <div class="pins">
+                    <p>Select a region on the map to see offers and requests near you.</p>
+                </div>
+                <div class="loader d-none"></div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+
+    @if (ViewBag.isAuthenticated == "false")
+    {
+        <p>You must have an account to see and drop pins.</p>
+    }
+
+    @if (ViewBag.noPins == "true")
+    {
+        <p>You don't have any pins. Please drop pins <a href="./Identity/Account/Manage/UserPin" class="btn btn-secondary">here</a>.</p>
+    }
+}
+
+<partial name="_InfoPin" />

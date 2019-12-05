@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-PocketPermaculture-5FBDF348-CE66-4C2F-AA51-B912157C0ECA</UserSecretsId>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <Deterministic>False</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.4" PrivateAssets="All" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+      <HintPath>..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.core\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20181005035345_UserPins.cs" />
+    <Compile Remove="Data\Migrations\20181005035345_UserPins.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181007234850_PostalCodeSchema.cs" />
+    <Compile Remove="Data\Migrations\20181007234850_PostalCodeSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181007212010_UserPinsSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181007212010_UserPinsSchema.cs" />
+    <Compile Remove="Data\Migrations\20181008000125_UserPinsSchema.cs" />
+    <Compile Remove="Data\Migrations\20181008000125_UserPinsSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181011023855_UserAddressSchema.cs" />
+    <Compile Remove="Data\Migrations\20181011023855_UserAddressSchema.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
+    <Folder Include="wwwroot\dist\" />
+    <Folder Include="wwwroot\js\thirdParty\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\js\site.min.js" />
+    <Content Remove="wwwroot\js\components\pins.js" />
+    <Content Remove="Views\Mustache\_InfoPin.cshtml" />
+    <Content Remove="wwwroot\mustache\infoPin.html" />
+  </ItemGroup>
+</Project>

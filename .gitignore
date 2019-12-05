@@ -1,0 +1,6 @@
+bin/
+obj/
+.vs/
+Debug/
+Release/
+node_modules/

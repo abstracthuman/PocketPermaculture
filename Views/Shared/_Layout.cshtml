@@ -1,0 +1,65 @@
+﻿@{
+    var action = (ViewContext.RouteData.Values["action"] ?? "").ToString().ToLower();
+    var controller = (ViewContext.RouteData.Values["controller"] ?? "").ToString().ToLower();
+    var mapClass = ViewBag.isNearMe == "true" ? "map" : "";
+}
+
+<!DOCTYPE html>
+<html class=@mapClass>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PocketPermaculture</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/dist/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/dist/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+        <div class="container">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">PocketPermaculture</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item @(controller + '/' + action == "home/index" ? "active" : "")"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
+                    <li class="nav-item @(controller + '/' + action == "home/about" ? "active" : "")"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link">About</a></li>
+                    <li class="nav-item @(controller + '/' + action == "home/contact" ? "active" : "")"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a></li>
+                    <li class="nav-item @(controller + '/' + action == "nearme/index" ? "active" : "")"><a asp-area="" asp-controller="NearMe" asp-action="Index" class="nav-link">Near Me</a></li>
+                </ul>
+
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content @mapClass">
+        <div class="@(controller + '/' + action != "home/index" ? "py-3" : "")">
+            @RenderBody()
+        </div>
+        <footer>
+            <hr />
+            <p>&copy; 2018 - PocketPermaculture</p>
+        </footer>
+        </div>
+
+    <environment include="Development">
+        <script src="~/dist/js/site.js" asp-append-version="true"></script>
+
+        @if (ViewBag.isNearMe == "true")
+        {
+            <partial name="../NearMe/_Map" />
+        }
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

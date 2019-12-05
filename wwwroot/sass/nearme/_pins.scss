@@ -1,0 +1,63 @@
+﻿.pins-container {
+    width: 100%;
+    height: 250px;
+    float: left;
+    position: relative;
+
+    @include media-breakpoint-up(sm) {
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        width: 30%;
+        height: 80%;
+        z-index: 5;
+    }
+
+    background: rgba(255, 255, 255, .8);
+    border: 3px solid #2E8B57;
+}
+
+.pins {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    overflow: auto;
+}
+
+.pin {
+    width: 100%;
+    height: auto;
+    background: white;
+    margin-bottom: 15px;
+}
+
+h3.pin-title {
+    margin-top: 5px;
+}
+
+.offer .card-header {
+    background: #2E8B57;
+}
+
+.request .card-header {
+    background: #CC0033;
+}
+
+.row.user-pins {
+    margin: 15px 0;
+
+    .card {
+        width: 100%;
+
+        @include media-breakpoint-up(lg) {
+            width: 47%;
+        }
+    }
+}
+
+.row.user-pins .card-header,
+.pins .card-header {
+    margin-top: 0;
+    color: white;
+    text-transform: capitalize;
+}

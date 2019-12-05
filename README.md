@@ -4,7 +4,8 @@ Service offering and request app for gardening / permaculture enthusiasts to bui
 
 ## DEVELOPMENT
 
-Built using Visual Studio for Mac / C# .NET / MySQL
+* Built using Visual Studio for Mac / C# .NET / MySQL
+* Uses Code First Migrations approach (search msdocs online for scaffolding)
 
 ## TODO
 
@@ -14,3 +15,4 @@ Built using Visual Studio for Mac / C# .NET / MySQL
 * Email verification
 * Add map search capabilities to see pins in other areas
 * Add geotargting for non-authenticated users
+* Add more details around setup here...

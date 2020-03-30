@@ -57,5 +57,6 @@
     <Content Remove="wwwroot\mustache\infoPin.html" />
     <Content Remove="wwwroot\dist\main.js" />
     <Content Remove="Views\Chat\Index.cshtml" />
+    <Content Remove="ApiClient\packages.config" />
   </ItemGroup>
 </Project>
